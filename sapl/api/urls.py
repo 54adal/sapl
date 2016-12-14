@@ -5,8 +5,10 @@ from rest_framework.routers import DefaultRouter
 from sapl.api.views import (AutoresPossiveisListView, AutoresProvaveisListView,
                             AutorListView, MateriaLegislativaViewSet,
                             ModelChoiceView, SessaoPlenariaViewSet)
+from sapl.api.views_saplmobile import MobileSessaoPlenariaViewSet
 
 from .apps import AppConfig
+
 
 app_name = AppConfig.name
 
@@ -14,6 +16,7 @@ app_name = AppConfig.name
 router = DefaultRouter()
 router.register(r'materia', MateriaLegislativaViewSet)
 router.register(r'sessao-plenaria', SessaoPlenariaViewSet)
+router.register(r'sessao', MobileSessaoPlenariaViewSet)
 urlpatterns_router = router.urls
 
 urlpatterns_api = [

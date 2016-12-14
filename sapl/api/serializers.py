@@ -1,8 +1,11 @@
+from django.utils import formats
+from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from sapl.base.models import Autor, CasaLegislativa
 from sapl.materia.models import MateriaLegislativa
-from sapl.sessao.models import OrdemDia, SessaoPlenaria
+from sapl.sessao.models import OrdemDia, SessaoPlenaria, TipoSessaoPlenaria
+from sapl.parlamentares.models import SessaoLegislativa
 
 
 class ChoiceSerializer(serializers.Serializer):
@@ -172,3 +175,38 @@ class SessaoPlenariaSerializer(serializers.ModelSerializer):
     def casa(self):
         casa = CasaLegislativa.objects.first()
         return casa
+
+
+class TipoSessaoPlenariaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TipoSessaoPlenaria
+        fields = '__all__'
+
+
+class SessaoLegislativaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SessaoLegislativa
+        fields = '__all__'
+
+
+class TituloSessaoPlenariaField(serializers.Field):
+
+    def to_representation(self, obj):
+        return formats.date_format(obj, 'd/m/Y (l)')
+
+
+class MobileSessaoPlenariaSerializer(serializers.ModelSerializer):
+    tipo = TipoSessaoPlenariaSerializer(read_only=True)
+    sessao_legislativa = SessaoLegislativaSerializer(read_only=True)
+    data = TituloSessaoPlenariaField(source='data_inicio')
+
+    class Meta:
+        model = SessaoPlenaria
+        fields = ('id',
+                  'numero',
+                  'tipo',
+                  'sessao_legislativa',
+                  'data',
+                  'hora_inicio')

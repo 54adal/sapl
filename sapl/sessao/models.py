@@ -168,6 +168,7 @@ class SessaoPlenaria(models.Model):
     class Meta:
         verbose_name = _('Sessão Plenária')
         verbose_name_plural = _('Sessões Plenárias')
+        ordering = ('-data_inicio', )
 
     def __str__(self):
         return _('%(numero)sª Sessão %(tipo_nome)s'
